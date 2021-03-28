@@ -1,0 +1,2 @@
+INDEX VERSION 1.131+D:\WORKSPACE\Java\RESTProject EtoE\.metadata\.plugins\org.eclipse.jdt.core
+2927782134.index
