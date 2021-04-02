@@ -1,6 +1,5 @@
 import React from "react";
 
-
 interface IProps{
     key1:string;
     key2:string;

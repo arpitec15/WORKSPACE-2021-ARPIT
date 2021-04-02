@@ -19,6 +19,7 @@ class Demo1 extends Component<IProps,IState>{
         })
     };
     fun_two = (arg1:any):any=>{
+        
         this.setState({
             param2 : arg1
         })
