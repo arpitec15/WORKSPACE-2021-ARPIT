@@ -1,4 +1,4 @@
-package com.aditya.VariableSizeWindow;
+package com.patterns.yt.VariableSizeWindow;
 
 public class VariableSizeSum {
 

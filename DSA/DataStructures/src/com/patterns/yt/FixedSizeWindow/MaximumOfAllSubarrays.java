@@ -1,4 +1,4 @@
-package com.aditya.FixedSizeWindow;
+package com.patterns.yt.FixedSizeWindow;
 
 import java.util.Deque;
 import java.util.LinkedList;
