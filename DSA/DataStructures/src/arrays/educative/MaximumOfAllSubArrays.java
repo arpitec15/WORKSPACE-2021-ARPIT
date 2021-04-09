@@ -1,4 +1,4 @@
-package com.patterns.yt.FixedSizeWindow;
+package arrays.educative;
 
 import java.util.ArrayList;
 import java.util.Arrays;

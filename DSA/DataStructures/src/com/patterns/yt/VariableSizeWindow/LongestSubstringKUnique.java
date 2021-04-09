@@ -6,8 +6,9 @@ public class LongestSubstringKUnique {
 
 	public static void main(String[] args) {
 
-		char arr[] = { 'a', 'a', 'b', 'a', 'c', 'b', 'e', 'b', 'e', 'b', 'e' };
-		int unique = 3;
+//		char arr[] = { 'a', 'a', 'b', 'a', 'c', 'b', 'e', 'b', 'e', 'b', 'e' };
+		char arr[] = { 'a', 'b', 'a', 'c', 'c', 'a','a', 'b'};
+		int unique = 2;
 		int longest = longestUniqueSubstring(arr, unique);
 		System.out.println("Maximum length of sub array is " + longest);
 	}

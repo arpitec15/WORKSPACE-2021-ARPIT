@@ -2,7 +2,7 @@
 // Input :  int arr2[] = {4,1,2,7,3};
 // Output: 28
 
-package arrays;
+package arrays.cs;
 import java.util.TreeSet;
 
 public class MaxMultiplicationOfTwoNumbers {

@@ -1,4 +1,4 @@
-package arrays;
+package arrays.cs;
 
 //Check if there exists a pair which matches given Sum
 

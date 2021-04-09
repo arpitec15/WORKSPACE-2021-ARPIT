@@ -1,4 +1,4 @@
-package arrays;
+package arrays.cs;
 
 //Find Equilibrium point where elements before & after it has equal sum
 

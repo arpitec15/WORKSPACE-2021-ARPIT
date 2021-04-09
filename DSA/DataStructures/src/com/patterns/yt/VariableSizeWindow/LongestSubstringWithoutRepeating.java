@@ -32,7 +32,6 @@ public class LongestSubstringWithoutRepeating {
 			else {
 				hm.put(arr[j], 1);
 				max = Math.max(j - i + 1, max);
-				System.out.println(max);
 				++j;
 			}
 		}

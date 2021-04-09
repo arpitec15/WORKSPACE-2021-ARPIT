@@ -1,4 +1,4 @@
-package arrays;
+package arrays.cs;
 
 //Print Elements which are greater than all it's right elements
 public class LeadersInArray {
