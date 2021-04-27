@@ -878,4 +878,298 @@ class Linked {
 
 		return;
 	}
+
+//	Node first, second;
+
+	public void mergeTwoListAlternatively(Node node1, Node node2) {
+
+		Node node1next, node2next;
+
+		Node first = node1;
+		Node second = node2;
+		Node temp = null;
+
+		while (node1 != null && node2 != null) {
+
+//			Variable just to preserve value
+			node1next = node1.next;
+
+//			Operation just to change value of "first" node
+			node1.next = node2;
+
+//			Copy back original value 
+			node1 = node1next;
+
+//			----------------------------------------
+
+//			Variable just to preserve value
+			node2next = node2.next;
+
+//			Operation just to change value of "second" node
+			node2.next = node1next;
+
+//			Copy back original value 
+			node2 = node2next;
+
+		}
+
+		second = node2;
+		printList(first);
+	}
+
+	public Node addOne(Node node) {
+
+		// Add 1 to linked list from end to beginning
+		int carry = addWithCarry(node);
+
+		// If there is carry after processing all nodes,
+		// then we need to add a new node to linked list
+		if (carry > 0) {
+			Node newNode = getNewNode(carry);
+			newNode.next = node;
+			return newNode; // New node becomes head now
+		}
+
+		return node;
+	}
+
+	private int addWithCarry(Node head) {
+
+		// If linked list is empty, then
+		// return carry
+		if (head == null)
+			return 1;
+
+		// Add carry returned be next node call
+		int res = head.i + addWithCarry(head.next);
+
+		// Update data and return new carry
+		head.i = (res) % 10;
+		return (res) / 10;
+	}
+
+	public Node addTwoNumbers(Node node1, Node node2) {
+
+		node1 = this.reverseRecursive(node1);
+		node2 = this.reverseRecursive(node2);
+
+		Node newListHead = null;
+		Node prev = null;
+		int sum, c = 0;
+
+		while (node1 != null || node2 != null) {
+			sum = c + (node1 != null ? node1.i : 0) + (node2 != null ? node2.i : 0);
+
+			c = sum / 10;
+
+			Node node = getNewNode(sum % 10);
+			if (newListHead == null) {
+				newListHead = node;
+			} else {
+				prev.next = node;
+			}
+
+			prev = node;
+
+			if (node1 != null) {
+				node1 = node1.next;
+			}
+
+			if (node2 != null) {
+				node2 = node2.next;
+			}
+		}
+
+		if (c != 0) {
+			prev.next = getNewNode(c);
+		}
+
+		newListHead = this.reverseRecursive(newListHead);
+
+		return newListHead;
+	}
+
+	public Node subTwoNumbers(Node node1, Node node2) {
+
+		Node head1 = node1;
+		Node head2 = node2;
+
+		int count1 = 0, count2 = 0;
+
+		while (node1 != null) {
+			node1 = node1.next;
+			count1++;
+		}
+
+		while (node2 != null) {
+			node2 = node2.next;
+			count2++;
+		}
+
+		node1 = head1;
+		node2 = head2;
+
+		if ((count1 < count2) || (count1 == count2 && node2 == getBiggerList(node1, node2))) {
+			Node t = node1;
+			node1 = node2;
+			node2 = t;
+		}
+
+		node1 = this.reverseRecursive(node1);
+		node2 = this.reverseRecursive(node2);
+
+		Node newListHead = null;
+		int diff;
+		int borrow = 0;
+
+		while (node1 != null || node2 != null) {
+
+			int firstNum = node1 == null ? 0 : node1.i;
+			int secondNum = node2 == null ? 0 : node2.i;
+
+			if (firstNum < secondNum) {
+				diff = (10 + firstNum) - secondNum - borrow;
+				borrow = 1;
+				newListHead = insert(diff, newListHead);
+
+			} else {
+
+				diff = firstNum - secondNum - borrow;
+				borrow = 0;
+				newListHead = insert(diff, newListHead);
+
+			}
+
+			if (node1 != null && node1.next != null) {
+				node1 = node1.next;
+			} else {
+				node1 = null;
+
+			}
+
+			if (node2 != null && node2.next != null) {
+				node2 = node2.next;
+			} else {
+				node2 = null;
+			}
+		}
+
+		newListHead = this.reverseRecursive(newListHead);
+
+		return newListHead;
+
+	}
+
+	private Node getBiggerList(Node node1, Node node2) {
+
+		Node head1 = node1;
+		Node head2 = node2;
+		while (node1 != null) {
+			if (node1.i > node2.i) {
+				return head1;
+			} else if (node1.i < node2.i) {
+				return head2;
+			}
+
+			node1 = node1.next;
+			node2 = node2.next;
+		}
+
+		return head1;
+
+	}
+
+	public boolean isTripletExistForSum(Node node1, Node node2, Node node3, int val) {
+
+		Node head2, head3;
+		head2 = node2;
+		head3 = node3;
+
+		while (node1 != null) {
+			while (node2 != null && node3 != null) {
+
+				int s = node1.i + node2.i + node3.i;
+
+				if (s == val) {
+					return true;
+				} else if (s > val) {
+					node3 = node3.next;
+				} else {
+					node2 = node2.next;
+				}
+			}
+
+			node1 = node1.next;
+			node2 = head2;
+			node3 = head3;
+		}
+
+		return false;
+
+	}
+
+	public Node makeMiddleNodeHead(Node node) {
+
+		if (node == null || node.next == null) {
+			return node;
+		}
+
+		Node slow, fast, head, prev;
+		slow = fast = head = prev = node;
+
+		while (fast.next != null && fast.next.next != null) {
+			prev = slow;
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+
+		prev.next = slow.next;
+		slow.next = head;
+		head = slow;
+
+		return head;
+
+	}
+
+	public Node insertNodeInMiddle(Node node, int val) {
+
+		Node slow = node, fast = node;
+
+		while (fast.next != null && fast.next.next != null) {
+
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+
+		Node newNode = getNewNode(val);
+
+		Node temp = slow.next;
+		newNode.next = temp;
+		slow.next = newNode;
+
+		return node;
+	}
+
+	public int countRotationInSortedRotatedList(Node node) {
+
+		int count = 0;
+		while (node != null) {
+
+			if (node.i < node.next.i) {
+				++count;
+				node = node.next;
+			} else {
+				++count;
+				break;
+			}
+
+		}
+
+		if (node.next == null) {
+			return 0;
+		} else {
+			return count + 1;
+		}
+
+	}
 }

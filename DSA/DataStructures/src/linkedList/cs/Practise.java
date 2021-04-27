@@ -13,34 +13,15 @@ public class Practise {
 		root = a.insert(5, root);
 		
 		Node one = root;
-		Node two = one;
+		Node two = root;
 		Node three = null;
 
-		while(one.next!= null) {
-			if(one.i <3) {
-				three = a.insert(one.i, three);				
-			}
-			one = one.next;
-		}
+		one.next.i = 5;
 		
-//		Node temp = null;
-//		temp = a.insert(11, temp);
-//		temp = a.insert(12, temp);
-//		temp = a.insert(13, temp);
-//		temp = a.insert(14, temp);
-//		temp = a.insert(15, temp);
-//		
-//		three.next.next.next = temp;
-//		
-		a.printList(root);
-		System.out.println();
-		System.out.println();
-		a.printList(one);
-		System.out.println();
-		System.out.println();
-		a.printList(three);
-//		System.out.println();
-//		System.out.println();
+		System.out.println("jhj");
+		
+		
+		
 	}
 }
 
