@@ -1,5 +1,10 @@
 package linkedList.cs;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.PriorityQueue;
+import java.util.Set;
+
 class Linked {
 
 	Node root;
@@ -17,7 +22,7 @@ class Linked {
 		printList(node.next);
 	}
 
-	private Node getNewNode(int i) {
+	Node getNewNode(int i) {
 
 		Node a = new Node();
 		a.i = i;
@@ -608,11 +613,17 @@ class Linked {
 			node = node.next;
 		}
 
-		node.next.next = head;
-		head = node.next;
+//		node.next.next = head;
+//		head = node.next;
+//
+//		node.next = null;
+//		return head;
 
+		Node temp = node.next;
 		node.next = null;
-		return head;
+		temp.next = head;
+
+		return temp;
 
 	}
 
@@ -753,6 +764,7 @@ class Linked {
 		int i = 0;
 
 		while (node != null && i < k) {
+
 			next = node.next;
 			node.next = prev;
 			prev = node;
@@ -761,7 +773,18 @@ class Linked {
 		}
 
 		if (next != null) {
-			head.next = reverseInGroupK(next, k);
+			int count = 0;
+			Node copy = next;
+			while (copy != null) {
+				copy = copy.next;
+				++count;
+			}
+			if (count < k) {
+				head.next = next;
+			} else {
+
+				head.next = reverseInGroupK(next, k);
+			}
 		}
 
 		return prev;
@@ -1172,4 +1195,961 @@ class Linked {
 		}
 
 	}
+
+	public Node mergeKSortedLists(Node[] arr, int last) {
+		while (last != 0) {
+			int i = 0;
+			int j = last;
+
+			while (i < j) {
+				arr[i] = mergeTwoSortedLinkedList(arr[i], arr[j]);
+
+				i++;
+				j--;
+
+				if (i >= j) {
+					last = j;
+					break;
+				}
+			}
+		}
+
+		return arr[0];
+	}
+
+	/*
+	 * It merges two sorted linked list
+	 */
+	public Node mergeTwoSortedLinkedList(Node node1, Node node2) {
+		if (node1 == null && node2 == null) {
+			return null;
+		}
+
+		if (node1 == null || node2 == null) {
+			return node1 != null ? node1 : node2;
+		}
+
+		return mergeTwoList(node1, node2);
+	}
+
+	/*
+	 * Helper function to merge two sorted linked list
+	 */
+	public Node mergeTwoList(Node first, Node second) {
+		if (first == null && second == null) {
+			return null;
+		}
+
+		Node tmp = new Node();
+		Node finalList = tmp;
+		while (first != null && second != null) {
+			if (first.i < second.i) {
+				tmp.next = first;
+				first = first.next;
+			} else {
+				tmp.next = second;
+				second = second.next;
+			}
+
+			tmp = tmp.next;
+		}
+
+		tmp.next = (first != null) ? first : second;
+
+		return finalList.next;
+	}
+
+//	--------------------------------------------
+//	Merge K sorted K Linked List Using Priority Queue
+//	Leetcode HARD problem
+
+	public Node mergeKListsUsingPQ(Node[] lists) {
+		if (lists == null || lists.length == 0)
+			return null;
+		PriorityQueue<Node> queue = new PriorityQueue<Node>(lists.length, (a, b) -> a.i - b.i);
+		Node dummy = new Node();
+		Node tail = dummy;
+
+		for (Node node : lists)
+			if (node != null)
+				queue.add(node);
+
+		while (!queue.isEmpty()) {
+			tail.next = queue.poll();
+			tail = tail.next;
+
+			if (tail.next != null)
+				queue.add(tail.next);
+		}
+		return dummy.next;
+	}
+
+//	--------------------------------------------
+	public Node getUnionOfTwoLinkedList(Node node1, Node node2) {
+		if (node1 == null && node2 == null) {
+			return null;
+		}
+
+		if (node1 == null || node2 == null) {
+			return node1 != null ? node1 : node2;
+		}
+
+		Set<Integer> s = new HashSet<>();
+
+		Node temp = new Node();
+		Node result = temp;
+
+		while (node1 != null) {
+			if (!s.contains(node1.i)) {
+				temp.next = node1;
+				temp = temp.next;
+				s.add(node1.i);
+			}
+			node1 = node1.next;
+		}
+
+		while (node2 != null) {
+			if (!s.contains(node2.i)) {
+				temp.next = node2;
+				temp = temp.next;
+				s.add(node2.i);
+			}
+			node2 = node2.next;
+		}
+		temp.next = null;
+
+		return result.next;
+	}
+
+	public Node getIntersectionOfTwoLinkedList(Node node1, Node node2) {
+		if (node1 == null || node2 == null) {
+			return null;
+		}
+
+		Set<Integer> s = new HashSet<>();
+
+		Node temp = new Node();
+		Node result = temp;
+
+		while (node1 != null) {
+			s.add(node1.i);
+			node1 = node1.next;
+		}
+
+		while (node2 != null) {
+			if (s.contains(node2.i)) {
+				temp.next = node2;
+				temp = temp.next;
+			}
+			node2 = node2.next;
+		}
+
+		temp.next = null;
+
+		return result.next;
+	}
+
+	public int getSumOfPairs(Node node1, Node node2, int sum) {
+		if (node1 == null || node2 == null) {
+			return 0;
+		}
+
+		HashSet<Integer> s = new HashSet<>();
+		int countPairs = 0;
+
+		while (node1 != null) {
+			s.add(node1.i);
+			node1 = node1.next;
+		}
+
+		while (node2 != null) {
+			if (s.contains(sum - node2.i)) {
+				countPairs++;
+			}
+
+			node2 = node2.next;
+		}
+
+		return countPairs;
+
+	}
+
+	public int getSumOfNodes(Node node) {
+		if (node == null) {
+			return 0;
+		}
+
+		int sum = 0;
+		while (node != null) {
+			sum = sum + node.i;
+			node = node.next;
+		}
+
+		return sum;
+	}
+
+	public int getSumOfLastNNodes(Node node, int n) {
+		if (node == null || n <= 0) {
+			return 0;
+		}
+
+		int sum = 0;
+		Node head = node;
+
+		while (node != null && n > 0) {
+			sum = sum + node.i;
+			node = node.next;
+			n--;
+		}
+
+		if (node == null) {
+			if (n > 0) {
+				System.out.println("N is greater than total nodes");
+				return 0;
+			} else {
+				return sum;
+			}
+		}
+
+		while (node.next != null) {
+			node = node.next;
+			head = head.next;
+		}
+
+		head = head.next;
+		sum = 0;
+
+		while (head != null) {
+			sum = sum + head.i;
+			head = head.next;
+		}
+
+		return sum;
+	}
+
+	public boolean ifEvenNodes(Node node) {
+		if (node == null) {
+			return true;
+		}
+
+		Node temp = node;
+
+		while (temp.next != null && temp.next.next != null) {
+			temp = temp.next.next;
+		}
+
+		if (temp.next == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public Node removeEveryKthNode(Node node, int k) {
+		if (node == null || k <= 1) {
+			return null;
+		}
+
+		if (node.next == null && k > 1) {
+			System.out.println("Not a valid case");
+			return node;
+		}
+
+		Node head = node;
+		int i = 1;
+
+		while (node != null && node.next != null) {
+			if (i % (k - 1) == 0) {
+				node.next = node.next.next;
+			}
+
+			node = node.next;
+			i++;
+		}
+
+		return head;
+	}
+
+	public void deleteOnlyGivenNode(Node node) {
+		if (node == null || node.next == null) {
+			return;
+		}
+
+		node.i = node.next.i;
+		node.next = node.next.next;
+	}
+
+	public Node deleteLastOccurrenceOfItem(Node node, int val) {
+		if (node == null) {
+			return null;
+		}
+
+		Node head, temp;
+
+		head = node;
+		temp = null;
+
+		while (node != null) {
+			if (node.i == val) {
+				temp = node;
+			}
+
+			node = node.next;
+		}
+
+		if (temp == null) {
+			return head;
+		}
+
+		if (temp == head) {
+			return head.next;
+		}
+
+		if (temp.next == null) {
+			node = head;
+			while (node.next.next != null) {
+				node = node.next;
+			}
+			node.next = null;
+			return head;
+		}
+
+		temp.i = temp.next.i;
+		temp.next = temp.next.next;
+
+		return head;
+	}
+
+	public Node sortWhichIsSortedOnAbsoluteValue(Node head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+
+		Node node, next, prev;
+
+		node = next = head;
+		prev = null;
+
+		if (head.i < 0) {
+			prev = node;
+			node = node.next;
+		}
+
+		while (node != null) {
+			if (node.i < 0) {
+				prev.next = node.next;
+				next = node.next;
+				node.next = head;
+				head = node;
+				node = next;
+			} else {
+				prev = node;
+				node = node.next;
+			}
+		}
+
+		return head;
+	}
+
+	public Node clone(Node node) {
+		if (node == null) {
+			return node;
+		}
+
+		Node first = node;
+		Node next = null;
+
+		while (node != null) {
+			Node newNode = getNewNode(node.i);
+			next = node.next;
+			node.next = newNode;
+			newNode.next = next;
+
+			node = next;
+		}
+
+		node = first;
+
+		while (node != null) {
+			node.next.random = node.random.next;
+			node = node.next != null ? node.next.next : node.next;
+		}
+
+		node = first;
+		Node copy = node.next;
+		Node tempCopy = copy;
+
+		while (node != null && copy != null) {
+			node.next = node.next != null ? node.next.next : node.next;
+			copy.next = copy.next != null ? copy.next.next : copy.next;
+
+			node = node.next;
+			copy = copy.next;
+		}
+
+		return tempCopy;
+	}
+
+	public Node cloneUsingHashmap(Node firstHead) {
+		if (firstHead == null) {
+			return null;
+		}
+
+		HashMap<Node, Node> m = new HashMap<>();
+		Node secondHead = null, secondNode = null;
+		Node firstNode = firstHead;
+
+		while (firstNode != null) {
+			Node newNode = getNewNode(firstNode.i);
+			if (secondHead == null) {
+				secondHead = newNode;
+				secondNode = secondHead;
+			} else {
+				secondNode.next = newNode;
+				secondNode = newNode;
+			}
+
+			m.put(firstNode, secondNode);
+			firstNode = firstNode.next;
+		}
+
+		firstNode = firstHead;
+		secondNode = secondHead;
+
+		while (firstNode != null) {
+			if (firstNode.random != null) {
+				secondNode.random = m.get(firstNode.random);
+			}
+
+			firstNode = firstNode.next;
+			secondNode = secondNode.next;
+		}
+
+		return secondHead;
+	}
+
+//	  -----------------------------------------------------------------
+
+	public Node mergeTwoSortedLinkedListReverseOrder(Node node1, Node node2) {
+		if (node1 == null && node2 == null) {
+			return null;
+		}
+
+		Node mergedList, next;
+		mergedList = null;
+
+		while (node1 != null && node2 != null) {
+			if (node1.i < node2.i) {
+				next = node1.next;
+				node1.next = mergedList;
+				mergedList = node1;
+				node1 = next;
+			} else {
+				next = node2.next;
+				node2.next = mergedList;
+				mergedList = node2;
+				node2 = next;
+			}
+		}
+
+		Node temp = node1 != null ? node1 : node2;
+		while (temp != null) {
+			next = temp.next;
+			temp.next = mergedList;
+			mergedList = temp;
+			temp = next;
+		}
+
+		return mergedList;
+	}
+
+//	----------------------------------------------------------------
+
+	public Node moveAllOccurrenceOfElementToEnd(Node head, int value) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+
+		Node node, tail, prev, next, temp;
+		node = head;
+		prev = null;
+
+		while (node.next != null) {
+			node = node.next;
+		}
+
+		tail = node;
+		temp = tail;
+		node = head;
+
+		while (node != temp) {
+			if (node.i == value && prev == null) {
+				next = node.next;
+				tail.next = node;
+				tail = tail.next;
+				node.next = null;
+				node = head = next;
+			} else if (node.i == value && prev != null) {
+				next = node.next;
+				prev.next = node.next;
+				tail.next = node;
+				tail = tail.next;
+				node.next = null;
+				node = next;
+			} else {
+				prev = node;
+				node = node.next;
+			}
+		}
+
+		return head;
+	}
+
+	public Node rearrangeLinkedListZigzag(Node head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+
+		Node node = head;
+		boolean flag = true;
+
+		while (node.next != null) {
+			if (flag) {
+				if (node.i > node.next.i) {
+					int t = node.i;
+					node.i = node.next.i;
+					node.next.i = t;
+				}
+				flag = !flag;
+			} else {
+				if (node.i < node.next.i) {
+					int t = node.i;
+					node.i = node.next.i;
+					node.next.i = t;
+				}
+				flag = !flag;
+			}
+
+			node = node.next;
+		}
+
+		return head;
+	}
+
+	public Node createList(int arr[]) {
+		Node node = null;
+
+		for (int i = 0; i < arr.length; i++) {
+			node = insert(arr[i], node);
+		}
+
+		return node;
+	}
+
+	public Node flattenEasy(Node node) {
+		if (node == null) {
+			return node;
+		}
+
+		Node start, end;
+		start = end = node;
+
+		while (end.next != null) {
+			end = end.next;
+		}
+
+		while (start != null) {
+			if (start.child != null) {
+				end.next = start.child;
+				end = end.next;
+
+				while (end.next != null) {
+					end = end.next;
+				}
+			}
+			start = start.next;
+		}
+
+		return node;
+	}
+
+//	Q.75 left
+
+	public Node rearrangeLinkedListAlternateMinMaxElements(Node head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+
+		head = sortLinkedList(head);
+
+		Node middleNode = findMiddleNode(head);
+		Node nextList = middleNode.next;
+		middleNode.next = null;
+
+		Node reversedList = reverseRecursive(nextList);
+		Node firstList = head;
+
+		Node finalList = new Node();
+		Node node = finalList;
+
+		while (firstList != null || reversedList != null) {
+
+			if (firstList != null) {
+				node.next = firstList;
+				node = node.next;
+				firstList = firstList.next;
+			}
+
+			if (reversedList != null) {
+				node.next = reversedList;
+				node = node.next;
+				reversedList = reversedList.next;
+			}
+		}
+
+		return finalList.next;
+	}
+
+	public Node rearrangeLinkedListInPlace(Node head) {
+		if (head == null || head.next == null || head.next.next == null) {
+			return head;
+		}
+
+		Node middleNode = findMiddleNode(head);
+		Node nextList = middleNode.next;
+		middleNode.next = null;
+
+		Node reversedList = reverseRecursive(nextList);
+		Node firstList = head;
+
+		Node finalList = new Node();
+		Node node = finalList;
+
+		while (firstList != null || reversedList != null) {
+
+			if (firstList != null) {
+				node.next = firstList;
+				node = node.next;
+				firstList = firstList.next;
+			}
+
+			if (reversedList != null) {
+				node.next = reversedList;
+				node = node.next;
+				reversedList = reversedList.next;
+			}
+		}
+
+		return finalList.next;
+	}
+
+	public Node rearrangeLinkedListAroundGivelValueKeepOrder(Node head, int val) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+
+		Node lessValueStartNode, lessValueEndNode, givenValueStartNode, givenValueEndNode, greaterValuesStartNode,
+				greaterValuesEndNode;
+
+		lessValueEndNode = lessValueStartNode = null;
+		givenValueStartNode = givenValueEndNode = null;
+		greaterValuesStartNode = greaterValuesEndNode = null;
+
+		Node node = head;
+
+		while (node != null) {
+			if (node.i < val) {
+				if (lessValueStartNode == null) {
+					lessValueStartNode = lessValueEndNode = node;
+				} else {
+					lessValueEndNode.next = node;
+					lessValueEndNode = node;
+				}
+			} else if (node.i == val) {
+				if (givenValueStartNode == null) {
+					givenValueStartNode = givenValueEndNode = node;
+				} else {
+					givenValueEndNode.next = node;
+					givenValueEndNode = node;
+				}
+			} else {
+				if (greaterValuesStartNode == null) {
+					greaterValuesStartNode = greaterValuesEndNode = node;
+				} else {
+					greaterValuesEndNode.next = node;
+					greaterValuesEndNode = node;
+				}
+			}
+			node = node.next;
+		}
+
+		lessValueEndNode.next = givenValueStartNode;
+		givenValueEndNode.next = greaterValuesStartNode;
+
+		greaterValuesEndNode.next = null;
+
+		return lessValueStartNode;
+	}
+
+	public Node arbitraryPointToNextGreaterElement(Node head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+
+		Node node = head;
+		while (node != null) {
+			node.random = node.next;
+			node = node.next;
+		}
+
+		sortLinkedList(head);
+
+		return head;
+	}
+
+	public Node alternateOddEvenNode(Node head) {
+		if (head == null || head.next == null) {
+			return head;
+		}
+
+		Node odd = new Node();
+		Node oddHead = odd;
+		Node even = new Node();
+		Node evenHead = even;
+
+		Node node = head;
+
+		while (node != null) {
+			if (node.i % 2 == 0) {
+				even.next = node;
+				even = even.next;
+			} else {
+				odd.next = node;
+				odd = odd.next;
+			}
+
+			node = node.next;
+		}
+
+		odd.next = null;
+		even.next = null;
+
+		odd = oddHead.next;
+		even = evenHead.next;
+
+		Node curr = new Node();
+		Node finalList = curr;
+
+		while (odd != null || even != null) {
+			if (odd != null) {
+				curr.next = odd;
+				curr = curr.next;
+				odd = odd.next;
+			}
+
+			if (even != null) {
+				curr.next = even;
+				curr = curr.next;
+				even = even.next;
+			}
+		}
+
+		curr.next = odd != null ? odd : even;
+
+		return finalList.next;
+	}
+
+	public boolean checkIfLinkedListOfStringFormsPalindrome(Node head) {
+		if (head == null) {
+			return false;
+		}
+
+		if (head.next == null) {
+			return true;
+		}
+
+		Node middle = findMiddleNode(head);
+		middle.next = reverseRecursive(middle.next);
+		Node secondHalf = middle.next;
+		Node second = secondHalf;
+		middle.next = null;
+
+		boolean ifPalidrome = true;
+		while (head != null && second != null) {
+			if (head.i != second.i) {
+				return false;
+			}
+
+			head = head.next;
+			second = second.next;
+		}
+
+		if (head != null && second == null) {
+			ifPalidrome = true;
+		}
+
+		middle.next = reverseRecursive(secondHalf);
+
+		return ifPalidrome;
+	}
+
+	public int compareString(Node head1, Node head2) {
+		if (head1 == null && head2 == null) {
+			return 0;
+		}
+
+		while (head1 != null && head2 != null) {
+			if (head1.i < head2.i) {
+				return -1;
+			} else if (head1.i > head2.i) {
+				return 1;
+			}
+
+			head1 = head1.next;
+			head2 = head2.next;
+		}
+
+		if (head1 == null && head2 == null) {
+			return 0;
+		}
+
+		return head1 != null ? 1 : -1;
+	}
+
+	public int lengthOfLongestPalindrome(Node node) {
+		if (node == null) {
+			return 0;
+		}
+
+		if (node.next == null) {
+			return 1;
+		}
+
+		Node next, prev;
+		prev = next = null;
+		int result = 1;
+
+		while (node != null) {
+			next = node.next;
+			node.next = prev;
+
+			result = Math.max(result, 2 * getCommonElementCount(prev, next) + 1);
+			result = Math.max(result, 2 * getCommonElementCount(node, next));
+
+			prev = node;
+			node = next;
+		}
+
+		return result;
+	}
+
+	public int getCommonElementCount(Node a, Node b) {
+		int count = 0;
+
+		while (a != null && b != null) {
+			if (a.i == b.i) {
+				count++;
+			} else {
+				break;
+			}
+
+			a = a.next;
+			b = b.next;
+		}
+
+		return count;
+	}
+
+//	------------------------------------------
+
+	int max = Integer.MIN_VALUE;
+	int min = Integer.MAX_VALUE;
+
+	public void getMaxMin(Node node) {
+		if (node == null) {
+			System.out.println("List is blank");
+			return;
+		}
+
+		while (node != null) {
+			if (node.i > max) {
+				max = node.i;
+			}
+
+			if (node.i < min) {
+				min = node.i;
+			}
+
+			node = node.next;
+		}
+	}
+
+	public Node deleteLargestElement(Node node) {
+		if (node == null || node.next == null) {
+			return null;
+		}
+
+		Node prevLargest, largest, head, prev;
+		head = largest = node;
+		prevLargest = null;
+		prev = node;
+		node = node.next;
+
+		while (node != null) {
+			if (node.i > largest.i) {
+				prevLargest = prev;
+				largest = node;
+			}
+
+			prev = node;
+			node = node.next;
+		}
+
+		if (head == largest) {
+			head = head.next;
+		} else {
+			prevLargest.next = largest.next;
+		}
+
+		return head;
+	}
+
+	public Node reverseFromGivenPositions(Node node, int p, int q) {
+		if (node == null || node.next == null || p >= q || p < 1 || q < 1) {
+			return node;
+		}
+
+		Node head = node;
+		Node prev = null;
+
+		for (int i = 1; node != null && i < p; i++) {
+			prev = node;
+			node = node.next;
+		}
+
+		if (node == null) {
+			return head;
+		}
+
+		Node firstPartLastNode = prev;
+		Node secondPartStartNode = node;
+		Node next = null;
+
+		for (int i = 0; node != null && i <= q - p; i++) {
+			next = node.next;
+			node.next = prev;
+			prev = node;
+			node = next;
+		}
+
+		if (p != 1) {
+			firstPartLastNode.next = prev;
+		}
+
+		secondPartStartNode.next = node;
+
+		return p == 1 ? prev : head;
+
+	}
+
 }
