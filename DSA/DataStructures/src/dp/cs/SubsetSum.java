@@ -35,12 +35,28 @@ public class SubsetSum {
 		return mat[arr.length - 1][sum];
 	}
 
+	private static boolean isSubsetExistsRecursive(int[] arr, int sum, int n) {
+
+		if (sum == 0)
+			return true;
+
+		if (n < 0)
+			return false;
+
+		if (arr[n] > sum)
+			return isSubsetExistsRecursive(arr, sum, n - 1);
+
+		return isSubsetExistsRecursive(arr, sum, n - 1) || isSubsetExistsRecursive(arr, sum - arr[n], n - 1);
+
+	}
+
 	public static void main(String[] args) {
 
 		int[] arr = { 1, 2, 3, 5 };
-		int sum = 7;
+		int sum = 5;
 
-		System.out.println(SubsetSum.isSubsetExists(arr, sum));
+//		System.out.println(SubsetSum.isSubsetExists(arr, sum));
+		System.out.println(SubsetSum.isSubsetExistsRecursive(arr, sum, arr.length - 1));
 
 	}
 

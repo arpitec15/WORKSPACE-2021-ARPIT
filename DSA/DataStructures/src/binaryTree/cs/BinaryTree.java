@@ -2337,9 +2337,9 @@ public class BinaryTree {
 	}
 
 //	end- check if there exists a pair for given Sum in Binary Tree
-	
-	
+
 	public boolean printAncestorsDummy(Node node, int val) {
+		
 		if (node == null) {
 			return false;
 		}
@@ -2354,6 +2354,25 @@ public class BinaryTree {
 		}
 
 		return false;
+	}
+
+	public void postOrderUsingStack(Node root) {
+		Stack<Node> stk = new Stack<>();
+		Node curr = root;
+
+		while (curr != null) {
+			stk.push(curr);
+			curr = curr.left;
+		}
+		
+		if(curr.right != null)
+			stk.push(curr.right);
+		
+		if(curr.left != null)
+			stk.push(curr.left);
+		
+		System.out.println();
+
 	}
 
 }

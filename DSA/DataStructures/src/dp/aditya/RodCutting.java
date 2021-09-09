@@ -13,19 +13,12 @@ class RodCutting {
 
 		// Recursively cut the rod in different pieces and
 		// compare different configurations
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < n; i++) {
+			System.out.println("Max val is " + max_val + " i is " + i + " n - i - 1 " + (n-i-1));
 			max_val = Math.max(max_val, price[i] + cutRodRecursive(price, n - i - 1));
+		}
 
 		return max_val;
-	}
-
-	/* Driver program to test above functions */
-	public static void main(String args[]) {
-		int arr[] = new int[] { 1, 5, 8, 9, 10, 17, 17, 20 };
-		int size = arr.length;
-		System.out.println("Maximum Obtainable Value is " + cutRodRecursive(arr, size));
-		System.out.println("Maximum Obtainable Value is " + cutRodMemoization(arr, size));
-
 	}
 
 	private static int cutRodMemoization(int[] price, int n) {
@@ -42,6 +35,37 @@ class RodCutting {
 		}
 
 		return val[n];
+	}
+
+	public static int rec(int[] price, int n) {
+		if (n == 0)
+			return 0;
+
+		int s = 1;
+		int e = n - 1;
+		int ans = price[n];
+
+		while (s <= e) {
+			int left = rec(price, s);
+			int right = rec(price, e);
+
+			if ((left + right) > ans)
+				ans = left + right;
+			s++;
+			e--;
+		}
+		return ans;
+	}
+
+	/* Driver program to test above functions */
+	public static void main(String args[]) {
+		int arr[] = new int[] { 1, 5, 8, 9, 10, 17, 17, 20 };
+		int size = arr.length;
+//		int arr[] = new int[] { 1, 5 };
+//		int size = arr.length;
+		System.out.println("Maximum Obtainable Value is " + cutRodRecursive(arr, size));
+//		System.out.println("Maximum Obtainable Value is " + cutRodMemoization(arr, size));
+
 	}
 
 }

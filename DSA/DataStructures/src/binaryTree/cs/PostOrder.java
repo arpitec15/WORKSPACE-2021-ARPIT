@@ -22,9 +22,11 @@ public class PostOrder {
 //		   3. Visit the root.
 		   
 		
-		System.out.print("Inorder: ");
-		a.postorder(root);
-		System.out.println();
+//		System.out.print("Inorder: ");
+//		a.postorder(root);
+//		System.out.println();
+		
+		a.postOrderUsingStack(root);
 
 	}
 
