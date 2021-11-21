@@ -33,4 +33,7 @@ public class RunnableLambdaExample {
 		System.out.println("After Java 8 : Comparison : " + compLambda.compare(3, 2));
 	}
 
+//	Consumer : accept some input and perform some operations on input
+
+
 }
